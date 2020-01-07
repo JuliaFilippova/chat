@@ -21,8 +21,13 @@ h1 {
   background: #20203cd4;
   padding: 15px;
 }
-.panel-message {
-  padding: 100px 0 0;
+#chatbox {
+  text-align:left;
+  padding:20px;
+  background:#fff;
+  height:270px;
+  border:1px solid #ACD8F0;
+  overflow:auto;
 }
 .panel-send {
   background: #20203cd4;
@@ -47,4 +52,11 @@ h1 {
   font-size: 23px;
   margin: 0 20px;
   cursor: pointer;
+}
+.btn-send {
+  background: transparent;
+  border: none;
+}
+.btn-send:focus {
+  outline: none;
 }
