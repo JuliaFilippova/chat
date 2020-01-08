@@ -1,5 +1,6 @@
 // отправка сообщения в чат
 const sendMessageFunction = () => {
+	if (messageIsEmpty()) return;
         //Функция которая берет текст из поля ввода
         let message = $('textarea').val();
 
@@ -8,8 +9,8 @@ const sendMessageFunction = () => {
         getNewMessageHtml()
         );
 
-        //очищает полеввода после отправки
-        $ ('#textarea').val('');
+        clearMessageInput();
+
     };
     
     // после ввода текста отправляем клавишей enter
@@ -60,6 +61,15 @@ const getNewMessageHtml = () => {
 	return liItem;
 }
 
+const messageIsEmpty = () => {
+    //Возвращает true если пусто или false если есть хоть 1 символ
+    let message = $('textarea').val();
+    return message.trim().length === 0;
+}
 
+const clearMessageInput = () => {
+    //Очищаем тут поле ввода после отправки смс
+        $ ('#textarea').val('');
+}
 
     
