@@ -7,6 +7,9 @@ body {
 div, input, textarea, a, button {
   box-sizing: border-box;
 }
+ul li {
+  list-style: none;
+}
 h1 {
   font-size: 25px;
   color: #fff;
@@ -25,7 +28,7 @@ h1 {
   text-align:left;
   padding:20px;
   background:#fff;
-  height:270px;
+  height:500px;
   border:1px solid #ACD8F0;
   overflow:auto;
 }
@@ -60,3 +63,41 @@ h1 {
 .btn-send:focus {
   outline: none;
 }
+/*message box*/
+.message {
+  display: table;
+  background: #46465d;
+  border-radius: 30px;
+  color: #fff;
+  padding: 5px 10px;
+  margin-left: 10px;
+  margin: 8px 8px 8px 35px;
+}
+.msg-box__avatar {
+  position: relative;
+}
+.msg-box__avatar img {
+  position: absolute;
+  top: -45px;
+  left: -65px;
+  width: 100%;
+  max-width: 50px;
+  max-height: 50px;
+  object-fit: cover;
+  border-radius: 50px;
+}
+.msg_time {
+  text-align: end;
+  display: block;
+  color: #ccc;
+  font-size: 11px
+}
+ul .items:nth-child(even) {
+  justify-content: flex-end;
+  display: flex;
+}
+.items .message ~ .msg-box__avatar :nth-child(even) {
+  order: 1;
+}
+
+
