@@ -1,7 +1,7 @@
 // отправка сообщения в чат
 const sendMessageFunction = () => {
     if (messageIsEmpty()) return;
-    
+
     //Формирует сообщение
     $('#chatbox ul').append(
         getNewMessageHtml()
@@ -42,7 +42,7 @@ const getNewMessageHtml = () => {
 
     // Класс для span
     spanTime.classList.add('msg_time');
-    spanTime.innerText = '04:20';
+    spanTime.innerText = getCurrentTime();
 
     // Класс для div в котором лежит span и div c картинкой
     divMessage.classList.add('message');
@@ -65,7 +65,12 @@ const messageIsEmpty = () => {
     return message.trim().length === 0;
 }
 
-const clearMessageInput = () => {
-    //Очищаем тут поле ввода после отправки смс
-    $('#textarea').val('');
+//Очищаем тут поле ввода после отправки смс
+const clearMessageInput = () => $('#textarea').val('');
+
+const getCurrentTime = () => {
+    // создали объукт с датой
+    const date = new Date();
+    // текущее время час минута секунда
+    return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
 }
