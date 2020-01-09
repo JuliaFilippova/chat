@@ -1,10 +1,10 @@
 // отправка сообщения в чат
-const sendMessageFunction = () => {
-    if (messageIsEmpty()) return;
+const sendMessageFunction = (file = null) => {
+    if (messageIsEmpty() && file === null) return;
 
     //Формирует сообщение
     $('#chatbox ul').append(
-        getNewMessageHtml()
+        getNewMessageHtml(file)
     );
 
     // вызываем функцию очищ поле ввода
@@ -19,7 +19,25 @@ $("#textarea").keyup(e => {
 // отправка сообщения по кнопке btn-send
 $("#btn-send").click(sendMessageFunction);
 
-const getNewMessageHtml = () => {
+
+// Эта страшная функция делает base64 для вставки картинок.
+// Т.к. в img в src вставляется ссылка, иначе картинку никак не отобразить
+// Но файлы еще можно хранить в закодированном виде
+// и через такую штуку отобразить картинку в разметке нигде на сервере ее не сохраняя
+// Тут еще есть страшная штука - callback. в функцию можно передать как параметр другую функцию
+// и вызвать ее когда надо
+const getImageSrcFromFile = (file, callback) => {
+    const fileReader = new FileReader;
+
+    fileReader.onload = ({ target }) => {
+        // Передаем обратно полученный код изображения
+        callback(target.result);
+    };
+
+    fileReader.readAsDataURL(file);
+};
+
+const getNewMessageHtml = (file = null) => {
     //Функция которая берет текст из поля ввода
     let message = $('textarea').val();
 
@@ -47,8 +65,34 @@ const getNewMessageHtml = () => {
 
     // Класс для div в котором лежит span и div c картинкой
     divMessage.classList.add('message');
-    // Кладем текст в див
-    divMessage.innerText = message;
+
+    if (file instanceof File) {
+        // Если это картинка, то вызываем функцию создание src для картинки и вставляем картинку
+        if (isImage(file)) {
+            // Создаем элемент картинки
+            const image = document.createElement('img');
+
+            getImageSrcFromFile(file, imgCode => {
+                image.setAttribute('src', imgCode);
+                image.setAttribute('width', '300');
+            });
+
+            // Кладем созданную картинку в див сообщения ( наверное надо отдельно это норм сверстать )
+            divMessage.appendChild(image);
+        } else {
+            // Если не картинка то вставляем имя и размер файла
+
+            // Размер файла хранится в байтах. Переводим в мегабайты и округляем до 2х символов после запятой
+            const fileSize = Number(file.size / (1024 * 1024)).toFixed(2);
+
+            divMessage.innerText = `Файл - ${file.name}. Размер файла - ${fileSize}mb`;
+        }
+    } else {
+        // Кладем текст в див
+        divMessage.innerText = message;
+    }
+
+
     // Кладем span и div с картинкой в .message
     divMessage.appendChild(spanTime);
     divMessage.appendChild(divAvatarBox);
@@ -64,7 +108,8 @@ const getNewMessageHtml = () => {
 // Длина строки, отправка сообщение от 1 символа
 const messageIsEmpty = () => {
     //Возвращает true если пусто или false если есть хоть 1 символ
-    let message = $('textarea').val();
+    const message = $('textarea').val();
+
     return message.trim().length === 0;
 }
 
@@ -76,6 +121,7 @@ const getCurrentTime = () => {
     const date = new Date();
     // текущее время час минута секунда
     return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+
 }
 
 // создаем функцию аватарки рандомные картинки
@@ -98,21 +144,13 @@ const getRandomAvatarUrl = () => {
 }
 
 
-// Проверка что выбранный файл это картинка 
+// Проверка что выбранный файл это картинка
 const isImage = file => {
-    return true;
-}
-// Вставка Сообщения с картинкой 
-const insertMessageWithImage = image => {
-    let messageHtml = '<div class="message">' + message + image + '</div>';
-}
+    const imageMimeTypes = ['image/gif', 'image/jpeg', 'image/png'];
 
-// Вставка сообщения с файлом
-const insertMessageWithFile = file => {
-    console.log(file)
-    // let messageHtml = '<div class="message">' + message + file + '</div>';
-}
-
+    // Проверяем что тип файла есть в массиве
+    return imageMimeTypes.includes(file.type);
+};
 
 // Вызывается после выбора файла, навесили эту функцию в emitFileInputClick
 const inputChangeHandler = e => {
@@ -123,9 +161,10 @@ const inputChangeHandler = e => {
     // Берем выбранный файл
     const file = e.target.files[0];
 
-    insertMessageWithFile(file);
-
-    isImage(file) ? insertMessageWithImage(file) : insertMessageWithFile(file);
+    // Вызываем функцию отправки смс
+    // Она же вызывается при клике на иконку отправки и на нажатие ентера
+    // Только тут мы передаем в нее файл
+    sendMessageFunction(file)
 }
 
 // Вызывается после клика на иконку
