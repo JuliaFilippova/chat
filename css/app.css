@@ -67,12 +67,18 @@ h1 {
 .message {
   display: table;
   background: #46465d;
-  border-radius: 30px;
+  border-radius: 20px;
   color: #fff;
-  padding: 5px 10px;
+  padding: 10px 10px 5px;
   margin-left: 10px;
   margin: 8px 8px 8px 35px;
   min-width: 80px;
+}
+.message img {
+  width: 100%;
+  max-width: 220px;
+  object-fit: cover;
+  border-radius: 20px;
 }
 .msg-box__avatar {
   position: relative;
@@ -91,7 +97,7 @@ h1 {
   text-align: end;
   display: block;
   color: #ccc;
-  font-size: 11px
+  font-size: 10px
 }
 ul .items:nth-child(even) {
   justify-content: flex-end;
