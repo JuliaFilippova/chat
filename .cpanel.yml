@@ -1,4 +1,4 @@
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/example/chat.codeid.ru/
+    - export DEPLOYPATH=/home/bhx20547/chat.codeid.ru/
     - /bin/cp -a * $DEPLOYPATH
